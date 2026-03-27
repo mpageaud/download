@@ -871,20 +871,16 @@ let currentLang = 'fr';
 
 function setLang(lang) {
   currentLang = lang;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll(`.lang-btn`).forEach(b => { if(b.textContent===lang.toUpperCase()) b.classList.add('active'); });
-
-  document.querySelectorAll('[data-fr]').forEach(el => {
-    const txt = el.getAttribute(`data-${lang}`);
+  document.querySelectorAll('.lang-btn').forEach(function(b) {
+    b.classList.remove('active');
+    if(b.textContent.trim() === lang.toUpperCase()) b.classList.add('active');
+  });
+  document.querySelectorAll('[data-fr]').forEach(function(el) {
+    var txt = el.getAttribute('data-' + lang);
     if (txt) el.textContent = txt;
   });
-
-  const input = document.getElementById('emailInput');
-  input.placeholder = lang === 'fr' ? 'Votre adresse email' : 'Your email address';
-
-  document.querySelectorAll('[data-placeholder-fr]').forEach(el => {
-    el.placeholder = el.getAttribute(`data-placeholder-${lang}`);
-  });
+  var input = document.getElementById('emailInput');
+  if(input) input.placeholder = lang === 'fr' ? 'Votre adresse email' : 'Your email address';
 }
 
 // ── FLOATING EMOJIS ──
@@ -912,8 +908,8 @@ function animateCounter(el, target, suffix = '') {
   }, 30);
 }
 
-window.addEventListener('load', () => {
-  setTimeout(() => {
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
     animateCounter(document.getElementById('cnt-users'), 247);
     animateCounter(document.getElementById('cnt-cities'), 12);
     animateCounter(document.getElementById('cnt-merchants'), 38);
