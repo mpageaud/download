@@ -898,23 +898,28 @@ for(let i = 0; i < 20; i++) {
 }
 
 // ── COUNTER ANIMATION ──
-function animateCounter(el, target, suffix = '') {
-  let current = 0;
-  const step = Math.ceil(target / 60);
-  const timer = setInterval(() => {
+function animateCounter(el, target) {
+  if (!el) return;
+  var current = 0;
+  var step = Math.ceil(target / 60);
+  var timer = setInterval(function() {
     current = Math.min(current + step, target);
-    el.textContent = current.toLocaleString() + suffix;
+    el.textContent = current;
     if (current >= target) clearInterval(timer);
   }, 30);
 }
 
-window.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function() {
-    animateCounter(document.getElementById('cnt-users'), 247);
-    animateCounter(document.getElementById('cnt-cities'), 12);
-    animateCounter(document.getElementById('cnt-merchants'), 38);
-  }, 800);
-});
+function startCounters() {
+  animateCounter(document.getElementById('cnt-users'), 247);
+  animateCounter(document.getElementById('cnt-cities'), 12);
+  animateCounter(document.getElementById('cnt-merchants'), 38);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() { setTimeout(startCounters, 800); });
+} else {
+  setTimeout(startCounters, 800);
+}
 
 // ── SIGNUP ──
 function handleSignup() {
