@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Festiville — La fête près de chez vous</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF6B35;
+    --gold: #FFD700;
+    --purple: #6B21A8;
+    --green: #16A34A;
+    --red: #DC2626;
+    --dark: #1a1a2e;
+    --light: #FFF8F0;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--light);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(255,248,240,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--gold);
+  }
+
+  .logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, var(--orange), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .lang-switch {
+    display: flex; gap: 0.5rem;
+  }
+
+  .lang-btn {
+    padding: 0.3rem 0.8rem;
+    border: 2px solid var(--orange);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--orange);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .lang-btn.active, .lang-btn:hover {
+    background: var(--orange);
+    color: white;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    background: linear-gradient(160deg, #FFF8F0 0%, #FFF0D6 50%, #FFE8E8 100%);
+    overflow: hidden;
+  }
+
+  .confetti {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .confetti span {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: confettiFall linear infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.7; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .season-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .hero h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    background: linear-gradient(135deg, var(--orange) 0%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .hero .tagline {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ---- COUNTER ---- */
+  .counter-section {
+    display: flex; gap: 2rem; justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .counter-item {
+    text-align: center;
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(255,107,53,0.15);
+    border: 2px solid rgba(255,107,53,0.1);
+  }
+
+  .counter-number {
+    font-family: 'Pacifico', cursive;
+    font-size: 2.2rem;
+    color: var(--orange);
+    display: block;
+  }
+
+  .counter-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* ---- FORM ---- */
+  .signup-form {
+    display: flex; gap: 1rem;
+    max-width: 500px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .signup-form input {
+    flex: 1;
+    min-width: 240px;
+    padding: 0.9rem 1.2rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .signup-form input:focus { border-color: var(--orange); }
+
+  .btn-primary {
+    padding: 0.9rem 2rem;
+    background: linear-gradient(135deg, var(--orange), #FF8C42);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(255,107,53,0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255,107,53,0.5);
+  }
+
+  .success-msg {
+    display: none;
+    background: #D1FAE5;
+    color: #065F46;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    margin-top: 1rem;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---- FEATURES ---- */
+  .section {
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    text-align: center;
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+
+  .section-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--card-accent, var(--orange));
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--card-accent, var(--orange));
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .feature-card h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+
+  .feature-card p {
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  /* ---- SEASONAL ---- */
+  .seasonal-section {
+    background: linear-gradient(135deg, var(--dark) 0%, #2d1b69 100%);
+    padding: 5rem 2rem;
+    text-align: center;
+    color: white;
+  }
+
+  .seasonal-section .section-title { color: var(--gold); }
+  .seasonal-section .section-sub { color: rgba(255,255,255,0.7); }
+
+  .seasons-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .season-card {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    width: 180px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .season-card:hover, .season-card.active {
+    background: rgba(255,215,0,0.2);
+    border-color: var(--gold);
+    transform: scale(1.05);
+  }
+
+  .season-card .s-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+  .season-card .s-name { font-weight: 800; font-size: 1rem; }
+
+  /* ---- MAP SECTION ---- */
+  .map-section {
+    background: #F0F9FF;
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  .map-placeholder {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    border: 2px dashed #CBD5E1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-dots {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .map-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+    animation: mapBounce 2s ease-in-out infinite;
+  }
+
+  .map-dot:hover { transform: scale(1.3); }
+
+  @keyframes mapBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .city-tags {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 1.5rem;
+  }
+
+  .city-tag {
+    background: var(--orange);
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  /* ---- MERCHANTS ---- */
+  .merchants-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, #FFF8F0, #FFF0E6);
+  }
+
+  .merchants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .merchant-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    border: 2px solid #FFE4D0;
+    transition: all 0.3s;
+  }
+
+  .merchant-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--orange);
+    box-shadow: 0 10px 30px rgba(255,107,53,0.15);
+  }
+
+  .merchant-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .merchant-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .merchant-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+  .price-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .btn-merchant {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.7rem 1.5rem;
+    background: transparent;
+    border: 2px solid var(--orange);
+    color: var(--orange);
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-merchant:hover {
+    background: var(--orange);
+    color: white;
+  }
+
+  /* ---- VIDEO ---- */
+  .video-section {
+    padding: 5rem 2rem;
+    text-align: center;
+    background: white;
+  }
+
+  .video-placeholder {
+    max-width: 800px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--dark), #2d1b69);
+    border-radius: 20px;
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-placeholder:hover { transform: scale(1.02); }
+
+  .play-btn {
+    width: 80px; height: 80px;
+    background: rgba(255,215,0,0.9);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s;
+  }
+
+  .video-placeholder:hover .play-btn { transform: scale(1.1); }
+
+  .video-label {
+    color: rgba(255,255,255,0.8);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /* ---- SOCIAL ---- */
+  .social-section {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--dark);
+    color: white;
+  }
+
+  .social-buttons {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;
+  }
+
+  .social-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+
+  .social-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+  .social-btn.instagram { background: linear-gradient(135deg, #E1306C, #F77737); color: white; }
+  .social-btn.tiktok { background: #000000; color: white; border: 1px solid #333; }
+  .social-btn.facebook { background: #1877F2; color: white; }
+  .social-btn.linkedin { background: #0A66C2; color: white; }
+
+  /* ---- FOOTER ---- */
+  footer {
+    background: #111;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+  }
+
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ---- SCROLL ANIMATION ---- */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 600px) {
+    .seasons-grid { gap: 1rem; }
+    .season-card { width: 140px; padding: 1.5rem 1rem; }
+    nav { padding: 0.8rem 1rem; }
+    .logo { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Festiville</div>
+  <div class="lang-switch">
+    <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="confetti" id="confetti"></div>
+
+  <div class="season-badge">
+    <span>🎉</span>
+    <span class="tr" data-fr="Bientôt disponible" data-en="Coming soon">Bientôt disponible</span>
+  </div>
+
+  <h1 class="tr" data-fr="La fête près de chez vous !" data-en="Celebrate your neighborhood!">La fête près de chez vous !</h1>
+
+  <p class="tagline tr" data-fr="Découvrez les maisons décorées, commerçants festifs et événements saisonniers autour de vous. Halloween, Noël, Pâques... la fête continue !" data-en="Discover decorated houses, festive shops and seasonal events around you. Halloween, Christmas, Easter... the party never stops!">
+    Découvrez les maisons décorées, commerçants festifs et événements saisonniers autour de vous. Halloween, Noël, Pâques... la fête continue !
+  </p>
+
+  <!-- COUNTERS -->
+  <div class="counter-section">
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-users">0</span>
+      <span class="counter-label tr" data-fr="Inscrits" data-en="Subscribers">Inscrits</span>
+    </div>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-cities">0</span>
+      <span class="counter-label tr" data-fr="Villes cibles" data-en="Target cities">Villes cibles</span>
+    </div>
+    <div class="counter-item">
+      <span class="counter-number" id="cnt-merchants">0</span>
+      <span class="counter-label tr" data-fr="Commerçants intéressés" data-en="Interested merchants">Commerçants intéressés</span>
+    </div>
+  </div>
+
+  <!-- SIGNUP FORM -->
+  <form class="signup-form" id="signupForm" onsubmit="handleSignup(event)">
+    <input type="email" id="emailInput" placeholder="votre@email.com" required />
+    <button type="submit" class="btn-primary">
+      <span class="tr" data-fr="🎊 Je veux être notifié !" data-en="🎊 Notify me at launch!">🎊 Je veux être notifié !</span>
+    </button>
+  </form>
+  <div class="success-msg" id="successMsg">
+    <span class="tr" data-fr="🎉 Merci ! Vous serez parmi les premiers informés !" data-en="🎉 Thanks! You'll be among the first to know!">🎉 Merci ! Vous serez parmi les premiers informés !</span>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section fade-up">
+  <h2 class="section-title tr" data-fr="Tout pour vivre la fête" data-en="Everything to celebrate">Tout pour vivre la fête</h2>
+  <p class="section-sub tr" data-fr="Une app festive, communautaire et interactive" data-en="A festive, community-driven interactive app">Une app festive, communautaire et interactive</p>
+
+  <div class="features-grid">
+    <div class="feature-card" style="--card-accent: #FF6B35;">
+      <span class="feature-icon">🗺️</span>
+      <h3 class="tr" data-fr="Carte interactive" data-en="Interactive map">Carte interactive</h3>
+      <p class="tr" data-fr="Pins festifs, photos de décos, créneaux de distribution, navigation intégrée et alertes de proximité." data-en="Festive pins, decoration photos, distribution slots, built-in navigation and proximity alerts.">Pins festifs, photos de décos, créneaux de distribution, navigation intégrée et alertes de proximité.</p>
+    </div>
+    <div class="feature-card" style="--card-accent: #6B21A8;">
+      <span class="feature-icon">🏪</span>
+      <h3 class="tr" data-fr="Espace commerçants" data-en="Merchant space">Espace commerçants</h3>
+      <p class="tr" data-fr="Profil vitrine, offres et réductions, vote du public pour les meilleures décos, parcours commerçants." data-en="Shop profile, offers and discounts, public vote for best decorations, merchant trail.">Profil vitrine, offres et réductions, vote du public pour les meilleures décos, parcours commerçants.</p>
+    </div>
+    <div class="feature-card" style="--card-accent: #16A34A;">
+      <span class="feature-icon">📅</span>
+      <h3 class="tr" data-fr="Agenda festif" data-en="Festive agenda">Agenda festif</h3>
+      <p class="tr" data-fr="Tous les événements saisonniers près de chez vous, avec rappels, météo et itinéraires." data-en="All seasonal events near you, with reminders, weather and itineraries.">Tous les événements saisonniers près de chez vous, avec rappels, météo et itinéraires.</p>
+    </div>
+    <div class="feature-card" style="--card-accent: #FFD700;">
+      <span class="feature-icon">🏆</span>
+      <h3 class="tr" data-fr="Gamification" data-en="Gamification">Gamification</h3>
+      <p class="tr" data-fr="Badges, classements, points fidélité convertibles en réductions chez les commerçants partenaires." data-en="Badges, rankings, loyalty points convertible into discounts at partner merchants.">Badges, classements, points fidélité convertibles en réductions chez les commerçants partenaires.</p>
+    </div>
+    <div class="feature-card" style="--card-accent: #DC2626;">
+      <span class="feature-icon">👨‍👩‍👧‍👦</span>
+      <h3 class="tr" data-fr="Communauté & famille" data-en="Community & family">Communauté & famille</h3>
+      <p class="tr" data-fr="Planification de parcours, partage sur les réseaux, forum local, avatar festif personnalisé." data-en="Route planning, social sharing, local forum, personalized festive avatar.">Planification de parcours, partage sur les réseaux, forum local, avatar festif personnalisé.</p>
+    </div>
+    <div class="feature-card" style="--card-accent: #0EA5E9;">
+      <span class="feature-icon">🌍</span>
+      <h3 class="tr" data-fr="Multilingue & accessible" data-en="Multilingual & accessible">Multilingue & accessible</h3>
+      <p class="tr" data-fr="FR / EN / DE, géolocalisation temps réel, mode invité, connexion Google & Apple." data-en="FR / EN / DE, real-time geolocation, guest mode, Google & Apple sign-in.">FR / EN / DE, géolocalisation temps réel, mode invité, connexion Google & Apple.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SEASONAL -->
+<section class="seasonal-section fade-up">
+  <h2 class="section-title tr" data-fr="Toutes les saisons, toutes les fêtes" data-en="Every season, every celebration">Toutes les saisons, toutes les fêtes</h2>
+  <p class="section-sub tr" data-fr="Festiville s'adapte à l'ambiance de chaque période" data-en="Festiville adapts to every festive season">Festiville s'adapte à l'ambiance de chaque période</p>
+
+  <div class="seasons-grid">
+    <div class="season-card active" onclick="selectSeason(this)">
+      <div class="s-icon">🎃</div>
+      <div class="s-name">Halloween</div>
+    </div>
+    <div class="season-card" onclick="selectSeason(this)">
+      <div class="s-icon">🎄</div>
+      <div class="s-name tr" data-fr="Noël" data-en="Christmas">Noël</div>
+    </div>
+    <div class="season-card" onclick="selectSeason(this)">
+      <div class="s-icon">🐣</div>
+      <div class="s-name tr" data-fr="Pâques" data-en="Easter">Pâques</div>
+    </div>
+    <div class="season-card" onclick="selectSeason(this)">
+      <div class="s-icon">🎆</div>
+      <div class="s-name tr" data-fr="Nouvel An" data-en="New Year">Nouvel An</div>
+    </div>
+    <div class="season-card" onclick="selectSeason(this)">
+      <div class="s-icon">🌸</div>
+      <div class="s-name tr" data-fr="Printemps" data-en="Spring">Printemps</div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section fade-up">
+  <h2 class="section-title tr" data-fr="Déjà attendu dans ces villes" data-en="Already expected in these cities">Déjà attendu dans ces villes</h2>
+  <p class="section-sub tr" data-fr="Festiville déploie ses ailes en France et en Suisse" data-en="Festiville is spreading its wings across France and Switzerland">Festiville déploie ses ailes en France et en Suisse</p>
+
+  <div class="map-placeholder">
+    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem;">🗺️ <span class="tr" data-fr="Carte interactive — disponible au lancement" data-en="Interactive map — available at launch">Carte interactive — disponible au lancement</span></p>
+    <div class="map-dots">
+      <div class="map-dot" style="background:#FFE4D0; animation-delay:0s;">🎃</div>
+      <div class="map-dot" style="background:#D1FAE5; animation-delay:0.2s;">🏠</div>
+      <div class="map-dot" style="background:#EDE9FE; animation-delay:0.4s;">⭐</div>
+      <div class="map-dot" style="background:#FEF9C3; animation-delay:0.6s;">🎄</div>
+      <div class="map-dot" style="background:#FFE4D0; animation-delay:0.8s;">🏪</div>
+      <div class="map-dot" style="background:#D1FAE5; animation-delay:1s;">🎃</div>
+      <div class="map-dot" style="background:#EDE9FE; animation-delay:0.3s;">⭐</div>
+      <div class="map-dot" style="background:#FEF9C3; animation-delay:0.5s;">🏠</div>
+      <div class="map-dot" style="background:#FFE4D0; animation-delay:0.7s;">🎄</div>
+      <div class="map-dot" style="background:#D1FAE5; animation-delay:0.9s;">🏪</div>
+      <div class="map-dot" style="background:#EDE9FE; animation-delay:1.1s;">🎃</div>
+      <div class="map-dot" style="background:#FEF9C3; animation-delay:0.1s;">⭐</div>
+    </div>
+    <div class="city-tags">
+      <span class="city-tag">🇨🇭 Genève</span>
+      <span class="city-tag">🇨🇭 Lausanne</span>
+      <span class="city-tag">🇨🇭 Bâle</span>
+      <span class="city-tag">🇫🇷 Lyon</span>
+      <span class="city-tag">🇫🇷 Strasbourg</span>
+      <span class="city-tag">🇫🇷 Bordeaux</span>
+      <span class="city-tag">🇫🇷 Nantes</span>
+      <span class="city-tag">+ <span class="tr" data-fr="bientôt" data-en="soon">bientôt</span>...</span>
+    </div>
+  </div>
+</section>
+
+<!-- MERCHANTS -->
+<section class="merchants-section fade-up">
+  <div style="max-width:1200px; margin: 0 auto; text-align:center;">
+    <h2 class="section-title tr" data-fr="Vous êtes commerçant ?" data-en="Are you a merchant?">Vous êtes commerçant ?</h2>
+    <p class="section-sub tr" data-fr="Rejoignez la communauté Festiville et boostez votre visibilité pendant les fêtes" data-en="Join the Festiville community and boost your visibility during the festive season">Rejoignez la communauté Festiville et boostez votre visibilité pendant les fêtes</p>
+
+    <div class="merchants-grid">
+      <div class="merchant-card">
+        <div class="merchant-icon">🆓</div>
+        <h3 class="tr" data-fr="Profil Gratuit" data-en="Free Profile">Profil Gratuit</h3>
+        <p class="tr" data-fr="Présence sur la carte, infos de base, photos de votre vitrine décorée." data-en="Map presence, basic info, photos of your decorated storefront.">Présence sur la carte, infos de base, photos de votre vitrine décorée.</p>
+        <div class="price-badge">CHF 0 / <span class="tr" data-fr="mois" data-en="month">mois</span></div>
+      </div>
+      <div class="merchant-card" style="border-color: var(--orange);">
+        <div class="merchant-icon">⭐</div>
+        <h3 class="tr" data-fr="Profil Pro" data-en="Pro Profile">Profil Pro</h3>
+        <p class="tr" data-fr="Icône colorée sur la carte, offres et réductions, statistiques, classement Top Déco." data-en="Colored icon on map, offers and discounts, statistics, Top Deco ranking.">Icône colorée sur la carte, offres et réductions, statistiques, classement Top Déco.</p>
+        <div class="price-badge">CHF 10 / <span class="tr" data-fr="mois" data-en="month">mois</span></div>
+        <br>
+        <button class="btn-merchant tr" data-fr="Je suis intéressé !" data-en="I'm interested!">Je suis intéressé !</button>
+      </div>
+      <div class="merchant-card">
+        <div class="merchant-icon">🏛️</div>
+        <h3 class="tr" data-fr="Ville Partenaire" data-en="Partner City">Ville Partenaire</h3>
+        <p class="tr" data-fr="Licence personnalisée pour communes et associations. Carte sur mesure, analytics, support." data-en="Custom license for municipalities and associations. Custom map, analytics, support.">Licence personnalisée pour communes et associations. Carte sur mesure, analytics, support.</p>
+        <div class="price-badge">CHF 1000 / <span class="tr" data-fr="an" data-en="year">an</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section fade-up">
+  <h2 class="section-title tr" data-fr="Comment ça marche ?" data-en="How does it work?">Comment ça marche ?</h2>
+  <p class="section-sub tr" data-fr="Découvrez Festiville en vidéo" data-en="Discover Festiville in video">Découvrez Festiville en vidéo</p>
+
+  <div class="video-placeholder" onclick="alert('Vidéo de présentation — disponible bientôt !')">
+    <div class="play-btn">▶️</div>
+    <div class="video-label tr" data-fr="Vidéo de présentation — bientôt disponible" data-en="Presentation video — coming soon">Vidéo de présentation — bientôt disponible</div>
+  </div>
+</section>
+
+<!-- SOCIAL -->
+<section class="social-section fade-up">
+  <h2 style="font-family: 'Pacifico', cursive; color: var(--gold); font-size: 2rem; margin-bottom: 0.5rem;" class="tr" data-fr="Suivez l'aventure" data-en="Follow the adventure">Suivez l'aventure</h2>
+  <p style="color: rgba(255,255,255,0.7);" class="tr" data-fr="Restez informé des dernières nouvelles Festiville" data-en="Stay informed about the latest Festiville news">Restez informé des dernières nouvelles Festiville</p>
+
+  <div class="social-buttons">
+    <a href="#" class="social-btn instagram">📸 Instagram</a>
+    <a href="#" class="social-btn tiktok">🎵 TikTok</a>
+    <a href="#" class="social-btn facebook">👍 Facebook</a>
+    <a href="#" class="social-btn linkedin">💼 LinkedIn</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-family: 'Pacifico', cursive; font-size: 1.5rem; color: var(--gold); margin-bottom: 0.5rem;">Festiville</p>
+  <p class="tr" data-fr="La fête près de chez vous — festiville.ch | festiville.fr" data-en="Celebrate your neighborhood — festiville.ch | festiville.fr">La fête près de chez vous — festiville.ch | festiville.fr</p>
+  <p style="margin-top: 0.5rem;">
+    <a href="mailto:contact@festiville.ch">contact@festiville.ch</a> |
+    <a href="mailto:contact@festiville.fr">contact@festiville.fr</a>
+  </p>
+  <p style="margin-top: 1rem; font-size: 0.75rem;">© 2026 Festiville — <span class="tr" data-fr="Tous droits réservés" data-en="All rights reserved">Tous droits réservés</span></p>
+</footer>
+
+<script>
+// ---- CONFETTI ----
+const confettiColors = ['#FF6B35','#FFD700','#6B21A8','#16A34A','#DC2626','#0EA5E9'];
+const confettiEl = document.getElementById('confetti');
+for (let i = 0; i < 40; i++) {
+  const s = document.createElement('span');
+  s.style.cssText = `
+    left: ${Math.random()*100}%;
+    width: ${6+Math.random()*10}px;
+    height: ${6+Math.random()*10}px;
+    background: ${confettiColors[Math.floor(Math.random()*confettiColors.length)]};
+    animation-duration: ${4+Math.random()*6}s;
+    animation-delay: ${Math.random()*5}s;
+    border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+  `;
+  confettiEl.appendChild(s);
+}
+
+// ---- COUNTERS ----
+function animateCounter(el, target, duration = 2000) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { el.textContent = target.toLocaleString(); clearInterval(timer); }
+    else el.textContent = Math.floor(start).toLocaleString();
+  }, 16);
+}
+
+setTimeout(() => {
+  animateCounter(document.getElementById('cnt-users'), 247);
+  animateCounter(document.getElementById('cnt-cities'), 12);
+  animateCounter(document.getElementById('cnt-merchants'), 34);
+}, 500);
+
+// ---- SIGNUP ----
+function handleSignup(e) {
+  e.preventDefault();
+  const email = document.getElementById('emailInput').value;
+  document.getElementById('signupForm').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+  const cnt = document.getElementById('cnt-users');
+  cnt.textContent = (parseInt(cnt.textContent.replace(/\D/g,'')) + 1).toLocaleString();
+}
+
+// ---- LANG ----
+let currentLang = 'fr';
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn:${lang === 'fr' ? 'first' : 'last'}-child`).classList.add('active');
+  document.querySelectorAll('.tr').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if (val) el.textContent = val;
+  });
+  document.documentElement.lang = lang;
+}
+
+// ---- SEASONS ----
+function selectSeason(card) {
+  document.querySelectorAll('.season-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+}
+
+// ---- SCROLL ANIMATIONS ----
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
